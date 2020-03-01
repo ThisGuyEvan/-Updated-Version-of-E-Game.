@@ -18,9 +18,12 @@ How to win:
 Fact(s):
   - Combonations are endless, decks and players are also endless 
   unless given that it is not possible to distribute equally.
+
+Bug:
+  - The variable pos in the while-loop is being affected by other properities of 
+  the game, so it's leading the count of player 2 -> player 3 (supposed to be player 1) despite max players being 2.
 */
 ///////////////////////////////////////////////
-
 
 class Main {
   public static void main(String[] args) {
