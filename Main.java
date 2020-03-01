@@ -1,5 +1,27 @@
 import java.util.*;
 
+///////////////////////////////////////////////
+/*       Information about this game
+Rules: 
+  - Players lose 1 point if they pass a round.
+  - Players gain a point if they successfully beat others during the round.
+
+Strategies:
+  - Players can use larger quantities of the same card rank to "sabatogage others".
+  - Look at the ranks and suits together, if one suit is larger, and another 1 is lower, use the interations of the game to move the cards in your deck to a certain position thatr is greater to output max value.
+
+How to win:
+  - Earn  the most points and win.
+  - Game ends when one deck is empty. If you pass, your pool of cards- 
+  does not get cleared! It is re-distributed back into your main hand.
+
+Fact(s):
+  - Combonations are endless, decks and players are also endless 
+  unless given that it is not possible to distribute equally.
+*/
+///////////////////////////////////////////////
+
+
 class Main {
   public static void main(String[] args) {
 
@@ -60,6 +82,8 @@ class Main {
     //////////////////////////////////////////
     //           Running the game           //
     //////////////////////////////////////////
+
+    //Variables coving the scope of the whole game.
     
     int[] scoring = new int[playerNum];
     int pos = gameDeck.getRotation();
@@ -67,16 +91,15 @@ class Main {
     int win = 0;
 
     while(gameDeck.isEmpty()){
+      //Clears the repl.it terminal/screen/console.
       //System.out.print("\033[0;0H\033[2J");  
       //System.out.flush();
 
       //Clears the gameboard after every "round".
       System.out.println("\nRound: " + round);
 
-      //Creating the variables for each round.
-
+      //Creating the variables and objects for each round.
       Card tests = new Card();
-
       ArrayList<ArrayList<Card>> playerHands =  new ArrayList<>(playerNum);
       for(int i = 0; i < playerNum; i++) {
         playerHands.add(new ArrayList());
@@ -89,11 +112,10 @@ class Main {
         System.out.println();
       }
 
-      System.out.println("THIS IS POSITION!!!  \t:" + pos);
-
+      //System.out.println("THIS IS POSITION!!!  \t:" + pos);
 
       System.out.println("!!! Starting player is player " + (pos+1) + " !!!");
-      System.out.print("How many cards do you want to select and use?\n- Singles(1), pairs(2) or triples(3) ? Max = ");
+      System.out.print("How many cards do you want to select and use?\n- Singles(1), pairs(2) or triples(3)...etc? Max = ");
 
       int num = console.nextInt();
       
@@ -101,6 +123,7 @@ class Main {
       //Code for each round.//
       ////////////////////////
       
+      //Iterates until every one of the players have went once.
       for (int i = 0; i < playerNum; i++){
 
         System.out.println("-----------------------------------\n-----------------------------------\nCurrent person in play: player " + (i+1) + "!");
@@ -109,21 +132,19 @@ class Main {
         int indexOfCard = 15;
 
         for (int x = 0; x < num; x++){
+          //Prompting the user given the amount of playable cards.
           System.out.print("\t*Enter a card using the format: <num>:<letterSuit>\t");
 
           String input = console.next();
           System.out.println();
 
+          indexOfCard = gameDeck.searchCard(input, pos); //Searches if the card is in deck. (Valid or Invalid).
 
-          indexOfCard = gameDeck.searchCard(input, pos);
-          
-
-          if (indexOfCard != 15){
-            playerHands.get(pos).add(gameDeck.getHand(pos).get(indexOfCard));
-
+          if (indexOfCard != 15){ //15 means not in deck.
+            //Adds the card temporary into the 2dArraylist.
+            playerHands.get(pos).add(gameDeck.getHand(pos).get(indexOfCard)); 
+            //Removes from the main hand of given player index, pos.
             gameDeck.removeCardInHand(pos, indexOfCard);
-
-
             System.out.println(playerHands);
 
           }
@@ -134,12 +155,13 @@ class Main {
               x--;
             }
             else{
-
+              scoring[pos]--; //Deducts point from the player due to passing.
               break;
             }
           }
         }
 
+        //Tests whether the card is a pair, triple and so on.
         if (tests.isAllowed(playerHands, pos)){
           System.out.println(tests.isAllowed(playerHands, pos));
           System.out.println("The Entered Comp does not match each other.");
@@ -148,22 +170,18 @@ class Main {
           for (int z = 0; z < playerHands.get(pos).size(); z++){
             gameDeck.getHand(pos).add(playerHands.get(pos).get(z));
           }
-
           playerHands.get(pos).clear();
-
-          i--;
-          pos--;
+          i--; //Player goes again since the given pool goes against rules.
+          pos--; // ^Same.
         }
-
-        
+        //Prevents the cycle from breaking. 
         if (pos == playerNum){
           pos = 0;
         }
-
         pos++;
       }
 
-
+      //Distribute the winner's point based on the "battle".
       win = tests.battle(playerHands, playerNum);
       System.out.println("Winner was player " + win + "!!!");
 
@@ -171,27 +189,28 @@ class Main {
       pos = 0;
       round++;
 
-
-      
     }
 
-    
+    //After completing the loop, this finds the winner based on acquired points.
     win = scoring[0];
     int winningIndex = 0;
+
+    //min v max algorithm
     for (int i = 0; i < scoring.length; i++){
       if (win < scoring[i]){
         win = scoring[i];
         winningIndex += i;
       }
     }
-
-
     System.out.println("The winner is Player" + winningIndex + "!!!");
-      
 
-
-    console.close();
+    console.close(); //Closes scanner.
   }
 
-
 }
+
+
+/* Notes (Helpful Links)
+https://www.baeldung.com/java-multi-dimensional-arraylist
+https://repl.it/talk/ask/In-repil-how-do-you-clear-the-screen-when-using-java/9810
+*/
