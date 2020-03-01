@@ -1,5 +1,9 @@
 import java.util.*;
 
+// *This is [Durak], but not really. (80% similarity).
+// In this case, rather than a trump card and suit, Diamond three is always #1
+// with Spades being largest suit.
+
 ///////////////////////////////////////////////
 /*       Information about this game
 Rules: 

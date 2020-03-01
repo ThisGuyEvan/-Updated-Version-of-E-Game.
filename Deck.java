@@ -85,7 +85,6 @@ public class Deck{
     }
   }
 
-
   public int searchCard(String s, int playerPos){
     int val = Integer.parseInt(s.substring(0, s.indexOf(":")));
     String suited = s.substring(s.indexOf(":")+1, s.length());

@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.*; 
 
 public class Card{
 
@@ -70,7 +70,7 @@ public class Card{
   public int getSuitValue(String s){
     int value = 0;
 
-    //Testing cases.
+    //Testing cases. //For Durak Change one of these values to trump suit.
     switch(s){
       case "Diamond": value = 1;
       case "Club": value = 2;
