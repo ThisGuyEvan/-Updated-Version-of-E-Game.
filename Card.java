@@ -31,7 +31,7 @@ public class Card{
 
   //Tests which card is larger based on rank and if they're the same, test which suits.
   public int battle(ArrayList<ArrayList<Card>> playerHands, int playerNum){
-    int maxInt = playerHands.get(0).get(0).getRank(); //Default
+    int maxInt = 0; //Default
     
     for (int i = 0; i < playerHands.get(0).size(); i++){
       for (int x = 0; x < playerNum-1; x++){
@@ -42,11 +42,11 @@ public class Card{
         //Since the ranking was not larger, then it might be equal so test suits.
         else if (playerHands.get(x).get(i).getRank() == playerHands.get(x+1).get(i).getRank()){
           //Tests which suit is larger by using the [getSuitValue] method.
-          if (getSuitValue(playerHands.get(x).get(i).getSuit()) > getSuitValue(playerHands.get(x+1).get(i).getSuit())){
-            maxInt = x;
+          if (getSuitValue(playerHands.get(x).get(i).getSuit()) < getSuitValue(playerHands.get(x+1).get(i).getSuit())){
+            maxInt = x+1;
           }
           else{ //If pre was greater.
-            maxInt = x+1;
+            maxInt = x;
           }
         }
       }

@@ -52,7 +52,6 @@ class Main {
 
     ArrayList<Card> deckOfCards = new ArrayList<Card>();
     
-    
     //Creating and assigning suits to the value of the "cards".
     for (int i = 0; i < deckNum; i++){ //Deck num = 2
       for (int x = 0; x < 13; x++){
@@ -66,7 +65,6 @@ class Main {
       deckOfCards.add(new Card(14, "Joker [+]"));
       deckOfCards.add(new Card(14, "Joker [-]"));
     }
-
     
     //////////////////////////////////////////
     //        Configuring player hands      //
@@ -85,7 +83,6 @@ class Main {
     gameDeck.organizeHand();
     System.out.println("\n\n\n");
 
-
     //////////////////////////////////////////
     //           Running the game           //
     //////////////////////////////////////////
@@ -98,20 +95,20 @@ class Main {
     int win = 0;
 
     while(gameDeck.isEmpty()){
-      //Clears the repl.it terminal/screen/console.
-      //System.out.print("\033[0;0H\033[2J");  
+      // {!} Clears the repl terminal
+      System.out.print("\033[H\033[2J");
       //System.out.flush();
-
+      
       //Clears the gameboard after every "round".
-      System.out.println("\nRound: " + round);
+      System.out.println("\n{!} Remember for each round, the console gets cleared {!}\nIf you wish to see results or previous logs, add '//' on to the print following the game-whileloop.\n\nRound: " + round);
 
       //Creating the variables and objects for each round.
+      boolean pass = false;
       Card tests = new Card();
       ArrayList<ArrayList<Card>> playerHands =  new ArrayList<>(playerNum);
       for(int i = 0; i < playerNum; i++) {
         playerHands.add(new ArrayList());
       }
-
       System.out.println("\nCurrent Pool:\t" + playerHands); //Prints hand of all players.
 
       for (int i = 0; i < playerNum; i++){
@@ -120,7 +117,6 @@ class Main {
       }
 
       //System.out.println("THIS IS POSITION!!!  \t:" + pos);
-
       System.out.println("!!! Starting player is player " + (pos+1) + " !!!");
       System.out.print("How many cards do you want to select and use?\n- Singles(1), pairs(2) or triples(3)...etc? Max = ");
 
@@ -132,12 +128,12 @@ class Main {
       
       //Iterates until every one of the players have went once.
       for (int i = 0; i < playerNum; i++){
-
-        System.out.println("-----------------------------------\n-----------------------------------\nCurrent person in play: player " + (i+1) + "!");
+        System.out.println("-----------------------------------\n-----------------------------------\nCurrent person in play: player " + (pos+1) + "!");
         System.out.println("You can enter a maximum of " + num + " cards.");
 
         int indexOfCard = 15;
-
+        
+        outerloop:
         for (int x = 0; x < num; x++){
           //Prompting the user given the amount of playable cards.
           System.out.print("\t*Enter a card using the format: <num>:<letterSuit>\t");
@@ -153,17 +149,19 @@ class Main {
             //Removes from the main hand of given player index, pos.
             gameDeck.removeCardInHand(pos, indexOfCard);
             System.out.println(playerHands);
-
           }
+
           else{
-            System.out.print("Please reselect(y) a card or pass(any other): ");
+            System.out.print("\t*Please reselect(y) a card or pass(any other non-numericals): ");
             String passing = console.next();
             if (passing.equalsIgnoreCase("y")){
               x--;
             }
+
             else{
-              scoring[pos]--; //Deducts point from the player due to passing.
-              break;
+              pass = true;
+              scoring[pos] -= 1; //Deducts point from the player due to passing.
+              break outerloop;
             }
           }
         }
@@ -181,21 +179,33 @@ class Main {
           i--; //Player goes again since the given pool goes against rules.
           pos--; // ^Same.
         }
+
         //Prevents the cycle from breaking. 
+        pos++;
         if (pos == playerNum){
           pos = 0;
         }
-        pos++;
+      }
+      
+      //Distribute the winner's point based on the "battle".
+      if (!pass){
+        win = tests.battle(playerHands, playerNum);
+        scoring[win] += 1;
+        System.out.println("Winner was player " + (win+1) + "!!!");
+        System.out.println("Score Log:");
+
+        for (int i = 0; i < playerNum; i++){
+          System.out.println("Player " + (i+1) + ": " + scoring[i]);
+        }
       }
 
-      //Distribute the winner's point based on the "battle".
-      win = tests.battle(playerHands, playerNum);
-      System.out.println("Winner was player " + win + "!!!");
-
-      scoring[win] += 1;
-      pos = 0;
+      else{
+        System.out.println("- A user has a passed. Moving on to the next round.");
+        pass = false;
+      }
+      //Next round modifiers.
       round++;
-
+      pos = gameDeck.getRotation();
     }
 
     //After completing the loop, this finds the winner based on acquired points.

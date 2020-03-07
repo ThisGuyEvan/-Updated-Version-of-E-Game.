@@ -115,7 +115,7 @@ public class Deck{
     }
 
     if (indexCard == 15){ //if not in deck.
-      System.out.println("You do not have this card in your possession.");
+      System.out.println("[!] You do not have this card in your possession [!]");
       return indexCard;
     }
     else{ //if is in deck.
